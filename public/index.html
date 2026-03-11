@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jimeng 4.0 文生图</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Jimeng 4.0 文生图</h1>
+      <p class="sub">输入提示词，选择比例和分辨率，一键生成图片。</p>
+
+      <section id="loginSection" class="card">
+        <h2>访问密码</h2>
+        <form id="loginForm">
+          <input id="passwordInput" type="password" placeholder="请输入访问密码" required />
+          <button type="submit">登录</button>
+        </form>
+        <p id="loginMessage" class="message"></p>
+      </section>
+
+      <section id="appSection" class="card hidden">
+        <div class="row between">
+          <h2>生成设置</h2>
+          <button id="logoutBtn" class="btn-ghost" type="button">退出</button>
+        </div>
+
+        <form id="generateForm">
+          <label for="prompt">提示词</label>
+          <textarea id="prompt" rows="4" maxlength="1000" required placeholder="例如：一只戴着宇航头盔的橘猫，在月球上拍摄电影海报，超清细节"></textarea>
+
+          <div class="grid">
+            <div>
+              <label for="ratio">画面比例</label>
+              <select id="ratio">
+                <option value="1:1">1:1</option>
+                <option value="4:3">4:3</option>
+                <option value="3:2">3:2</option>
+                <option value="16:9">16:9</option>
+                <option value="21:9">21:9</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="resolution">分辨率</label>
+              <select id="resolution">
+                <option value="1K">1K</option>
+                <option value="2K">2K</option>
+                <option value="4K">4K</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="generateBtn" type="submit">生成图片</button>
+        </form>
+
+        <div id="statusBar" class="status hidden">状态：-</div>
+        <p id="generateMessage" class="message"></p>
+        <div id="results" class="results"></div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
