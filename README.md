@@ -1,91 +1,91 @@
-# Jimeng 4.0 文生图 Web App（最小可用版）
+# Jimeng 4.0 Text-to-Image Web App (Minimal Viable Version)
 
-一个可部署的 Node.js + Express + 原生前端单页应用，用于调用 Jimeng 4.0 文生图异步 API。
+A deployable Node.js + Express + plain frontend single-page app for calling the Jimeng 4.0 asynchronous text-to-image API.
 
-## 功能概览
+## Feature Overview
 
-- 中文单页界面：提示词 + 比例 + 分辨率 + 一键生成
-- 后端代理调用 API，前端不接触 AccessKey / SecretKey
-- 访问密码门禁（轻量 session）
-- 基础限流与严格参数校验
-- 轮询异步任务直到完成并返回图片 URL
+- Chinese single-page UI: prompt + ratio + resolution + one-click generation
+- Backend proxy for API calls; the frontend never touches AccessKey / SecretKey
+- Password-gated access (lightweight session-based auth)
+- Basic rate limiting and strict request validation
+- Polling for asynchronous tasks until completion and returning image URLs
 
-## 本地启动
+## Run Locally
 
-### 1) 安装依赖
+### 1) Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2) 配置环境变量
+### 2) Configure environment variables
 
-复制并编辑：
+Copy and edit:
 
 ```bash
 cp .env.example .env
 ```
 
-必填变量：
+Required variables:
 
 - `VOLC_ACCESS_KEY`
 - `VOLC_SECRET_KEY`
 - `APP_PASSWORD`
-- `PORT`（默认可填 3000）
-- `SESSION_SECRET`（强烈建议设置）
+- `PORT` (default can be `3000`)
+- `SESSION_SECRET` (strongly recommended)
 
-### 3) 运行
+### 3) Start the app
 
-开发模式：
+Development mode:
 
 ```bash
 npm run dev
 ```
 
-生产模式：
+Production mode:
 
 ```bash
 npm start
 ```
 
-访问 `http://localhost:3000`。
+Visit `http://localhost:3000`.
 
-## API 路由
+## API Routes
 
-- `POST /api/login`：密码登录
-- `POST /api/generate`：提交并轮询任务，返回最终图片 URL
-- `GET /api/health`：健康检查
-- `GET /api/me`：当前会话登录状态
-- `POST /api/logout`：退出登录
+- `POST /api/login`: password login
+- `POST /api/generate`: submit and poll the task, then return final image URLs
+- `GET /api/health`: health check
+- `GET /api/me`: current session login status
+- `POST /api/logout`: logout
 
-## Jimeng 调用说明
+## Jimeng API Integration Notes
 
 - Base URL: `https://visual.volcengineapi.com`
 - Submit: `Action=CVSync2AsyncSubmitTask&Version=2022-08-31`
 - Get Result: `Action=CVSync2AsyncGetResult&Version=2022-08-31`
-- 固定参数：
+- Fixed parameters:
   - `req_key = jimeng_t2i_v40`
   - `region = cn-north-1`
   - `service = cv`
   - `force_single = true`
-  - 结果查询时 `req_json` 为 JSON 字符串，带 `return_url=true`
+  - For result polling, `req_json` is a JSON string with `return_url=true`
 
-## Railway 部署（简版）
+## Railway Deployment (Quick Version)
 
-1. 将仓库推送到 GitHub。
-2. 在 Railway 新建 Project 并导入仓库。
-3. 在 Variables 中配置 `.env` 同名变量。
-4. Start Command 使用 `npm start`。
-5. 部署后使用 Railway 分配域名访问。
+1. Push this repository to GitHub.
+2. Create a new project in Railway and import the repository.
+3. Configure environment variables in Railway Variables using the same names as in `.env`.
+4. Use `npm start` as the Start Command.
+5. Access the app using the Railway-generated domain after deployment.
 
-详细见 `DEPLOY.md`。
+See `DEPLOY.md` for details.
 
-## 安全说明（重点）
+## Security Notes (Important)
 
-- 密钥只保存在服务端环境变量中。
-- 浏览器仅请求你的后端 API，不直接访问火山引擎签名接口。
-- 使用 `express-session` 维护登录态（无用户系统）。
-- 对登录与生成接口做限流，减少暴力尝试与滥用。
-- 后端对 prompt / ratio / resolution 严格白名单校验。
+- Secrets are stored only in server-side environment variables.
+- The browser only calls your backend API and never directly accesses the Volcengine signed interface.
+- Login state is maintained using `express-session` (no user management system).
+- Login and generation endpoints are rate-limited to reduce brute-force and abuse.
+- The backend enforces strict allowlist validation for `prompt` / `ratio` / `resolution`.
 
-详细见 `SECURITY.md`。
+See `SECURITY.md` for details.
